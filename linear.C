@@ -332,7 +332,7 @@ void SpinAdapted::Linear::block_davidson(vector<StackWavefunction>& b, DiagonalM
 
 void makeOrthogonalToLowerStates(StackWavefunction& targetState, std::vector<StackWavefunction>& lowerStates) {
   for (int i=1; i<lowerStates.size(); i++) {
-    double overlap2 = pow(DotProduct(lowerStates[i], lowerStates[i]), 0.5);
+    double overlap2 = DotProduct(lowerStates[i], lowerStates[i]);
     if (fabs(overlap2) > NUMERICAL_ZERO) { 
       ScaleAdd(-DotProduct(targetState, lowerStates[i])/overlap2, 
 	       lowerStates[i], targetState);
