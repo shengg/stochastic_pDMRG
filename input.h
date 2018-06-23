@@ -176,6 +176,10 @@ class Input {
   bool m_conventional_nevpt2;
   int m_kept_nevpt2_states;
   pair<bool,int> NevPrint;
+  bool m_stochasticpt_restart;
+  long m_stochasticpt_nsamples;
+  long m_stochasticpt_Hsamples;
+  double m_stochasticpt_tol;
 
   friend class boost::serialization::access;
   template<class Archive>
@@ -199,6 +203,7 @@ class Input {
     ar & m_spatial_to_spin & m_spin_to_spatial & m_maxM & m_bra_M & m_schedule_type_backward & m_schedule_type_default &m_integral_disk_storage_thresh;
     ar & n_twodot_noise & m_twodot_noise & m_twodot_gamma & m_guessState & m_useSharedMemory ;
     ar & m_calc_ri_4pdm & m_store_ripdm_readable & m_nevpt2 & m_conventional_nevpt2 & m_kept_nevpt2_states & NevPrint;
+    ar & m_stochasticpt_restart & m_stochasticpt_nsamples & m_stochasticpt_Hsamples & m_stochasticpt_tol;
   }
 
 
@@ -538,6 +543,10 @@ class Input {
   bool &npdm_multinode() { return m_npdm_multinode; }
   const bool &npdm_multinode() const { return m_npdm_multinode; }
   int bra_M() const {return m_bra_M;}
+  const bool &stochasticpt_restart() const { return m_stochasticpt_restart; }
+  const long &stochasticpt_nsamples() const { return m_stochasticpt_nsamples; }
+  const long &stochasticpt_Hsamples() const { return m_stochasticpt_Hsamples; }
+  const double &stochasticpt_tol() const { return m_stochasticpt_tol; }
   
 };
 }

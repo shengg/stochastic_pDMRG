@@ -201,6 +201,10 @@ void SpinAdapted::Input::initialize_defaults()
 
   m_orbformat=MOLPROFORM;
 
+  m_stochasticpt_restart = false;
+  m_stochasticpt_nsamples =1000;
+  m_stochasticpt_Hsamples = 10;
+  m_stochasticpt_tol = 1.0e-8;
   m_warmup = LOCAL0;
 }
 
@@ -924,6 +928,22 @@ SpinAdapted::Input::Input(const string& config_name) {
       }
 
 
+      else if (boost::iequals(keyword,  "sto_pt_restart") )
+      {
+        m_stochasticpt_restart = true;
+      }
+      else if (boost::iequals(keyword,  "sto_pt_nsamples") )
+      {
+        m_stochasticpt_nsamples = atoi(tok[1].c_str());
+      }
+      else if (boost::iequals(keyword,  "sto_pt_Hsamples") )
+      {
+        m_stochasticpt_Hsamples = atoi(tok[1].c_str());
+      }
+      else if (boost::iequals(keyword,  "pt_tol") )
+      {
+        m_stochasticpt_tol =atof(tok[1].c_str());
+      }
       else if (boost::iequals(keyword,  "docd") || boost::iequals(keyword,  "do_npdm_ops"))
       {
         m_do_npdm_ops = true;

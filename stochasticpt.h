@@ -3,46 +3,33 @@
 
 #include <vector>
 #include "global.h"
+#include "timer.h"
+#include "sampling.h"
+#include <bitset>
 
-namespace SpinAdapted{
-  class StateQuantaInfo
+double local_energy(const bitstring& ci, int integralIndex)
+{
+  std::clock_t startTime = std::clock();
+
+  double energy = coreEnergy[integralIndex];
+  int n = ci.size();
+
+  std::vector<int> occupy;
+  for(int i=0;i<n;i++)
+    if(ci[i])
+      occupy.push_back(i);
+  for(auto i: occupy)
+    energy += v_1[integralIndex](i, i);
+
+  for(int i=0;i<occupy.size();i++)
+  for(int j=i+1;j<occupy.size();j++)
   {
-    struct leftquantainfo
-    {
-      int first; // The number of left quanta.
-      int second;// The number of states in the quanta.
-      int third; // After collecting combined quanta from left quanta and dot quanta, the position of this quanta in combined quanta.
-      leftquantainfo() :first(0), second(0), third(0){};
-      leftquantainfo(int a, int b, int c) :first(a), second(b), third(c){};
-    
-      friend class boost::serialization::access;
-      template<class Archive>
-        void serialize(Archive & ar, const unsigned int version)
-        {
-          ar & first \
-            & second\
-            & third;
-        }
-    
-    };
-    typedef std::pair<int,int> intpair;
-    int currentstate;
-    std::vector< std::map < intpair, intpair> > quantalink;
-    std::vector< std::map < intpair, leftquantainfo> > reversequantalink;
-    std::vector< std::vector<Matrix> > RotationMatrices;
-    std::vector< std::vector<int> > Spins;
-    public:
-    double norm;
-    public:
-    StateQuantaInfo(int state=0): currentstate(state), quantalink(), reversequantalink(), RotationMatrices(){};
-    void StoreQuantaInformation(SweepParams &sweepParams, const bool &forward);
-    void readRotationandQuanta();
-    double getcoeff(const std::vector<int>& ci);
-    void preparestate();
-    void initstate();
-    void get_slater();
-    double sampling(std::vector<int>& ci);
-    static double local_energy(const std::vector<int>& ci);
-  };
+    energy += v_2[integralIndex](occupy[i],occupy[j],occupy[i],occupy[j]);
+    energy -= v_2[integralIndex](occupy[j],occupy[i],occupy[i],occupy[j]);
+  }
+  //HdiagonalT += (std::clock() -startTime)/ (double) CLOCKS_PER_SEC;
+  return energy;
+
 }
+
 #endif
